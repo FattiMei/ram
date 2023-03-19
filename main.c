@@ -11,7 +11,7 @@
 
 struct Operand{
 	enum{
-		NESSUNO
+		NESSUNO = 0
 	   ,NUMERO
 	   ,REGISTRO
 	   ,PUNTATORE
@@ -25,7 +25,8 @@ struct Operand{
 
 struct Instruction{
 	enum{
-		 LOAD
+		 HALT = 0
+		,LOAD
 		,ADD
 		,SUB
 		,MULT
@@ -37,7 +38,6 @@ struct Instruction{
 		,JGTZ
 		,JZERO
 		,JBLANK
-		,HALT
 	} code;
 
 	struct Operand op;
@@ -47,6 +47,7 @@ struct Instruction{
 struct RAM{
 	enum{
 		 OK
+		,END
 		,ERROR
 		,INVALID_OPERAND
 		,NEGATIVE_INDEX
@@ -57,7 +58,7 @@ struct RAM{
 
 	int registri[NREG];
 
-	struct Istruzione *P;
+	struct Instruction *P;
 	int program_size;
 	int lc;
 
@@ -92,11 +93,6 @@ const int commandtable[] = {
 };
 
 
-void ClearErrors(struct RAM *M){
-	M->state = OK;
-}
-
-
 void Dump(struct RAM *M){
 	printf("State: %s\n\n", stateliteral[M->state]);
 
@@ -109,8 +105,7 @@ void Dump(struct RAM *M){
 
 
 void Reset(struct RAM *M){
-	ClearErrors(M);
-
+	M->state = OK;
 	M->lc = 0;
 
 	for(int i = 0; i < NREG; ++i){
@@ -119,8 +114,11 @@ void Reset(struct RAM *M){
 }
 
 
-void Init(struct RAM *M, struct Stream *in){
+void Init(struct RAM *M, struct Stream *in, struct Instruction *P, int size){
 	M->input = in;
+
+	M->P = P;
+	M->program_size = size;
 	Reset(M);
 }
 
@@ -157,6 +155,8 @@ struct Operand Dereference(struct RAM *M, struct Operand op){
 
 void Execute(struct RAM *M, struct Instruction I){
 	/* controlla che l'istruzione accetti il parametro */
+	int has_to_jump = 0;
+	int where_to_jump = 0;
 
 	if(M->state == OK){
 		I.op = Dereference(M, I.op);
@@ -165,6 +165,10 @@ void Execute(struct RAM *M, struct Instruction I){
 			int x;
 
 			switch(I.code){
+				case HALT:
+					M->state = END;
+					break;
+
 				case LOAD:
 					// questo pattern si ripete per tutti quelle istruzioni
 					// che alla fine devono trattare numeri
@@ -210,15 +214,45 @@ void Execute(struct RAM *M, struct Instruction I){
 				case WRITE:
 					printf("%d\n", *Access(M, I.op.data));
 					break;
+
+				case JUMP:
+					has_to_jump = 1;
+					where_to_jump = I.op.data;
+
+					break;
+
+				case JBLANK:
+					if(StreamIsEmpty(M->input)){
+						has_to_jump = 1;
+						where_to_jump = I.op.data;
+					}
+
+					break;
 			}
 		}
+
+		if(has_to_jump){
+			if(where_to_jump >= 0 && where_to_jump < M->program_size)
+				M->lc = where_to_jump;
+		}
+		else if(I.code != HALT){
+			(M->lc)++;
+		}
+
+	}
+}
+
+
+void Run(struct RAM *M){
+	while(M->state == OK){
+		Execute(M, *((M->P) + M->lc));
 	}
 }
 
 /*
 	struct Instruction Somma[] = {
 		 {LOAD,   {NUMERO,    0}}
-		,{JBLANK, {ETICHETTA, 7}}
+		,{JBLANK, {ETICHETTA, 6}}
 		,{READ,   {REGISTRO,  1}}
 		,{ADD,    {REGISTRO,  1}}
 		,{JUMP,   {ETICHETTA, 2}}
@@ -233,27 +267,18 @@ int main(){
 	struct Stream *S = StreamNew(V, numel(V));
 
 	struct Instruction Programma[] = {
-		 {READ,   {REGISTRO,  1}}
-		,{ADD,    {REGISTRO,  1}}
+		 {LOAD,   {NUMERO,    0}}
+		,{JBLANK, {ETICHETTA, 6}}
 		,{READ,   {REGISTRO,  1}}
 		,{ADD,    {REGISTRO,  1}}
-		,{READ,   {REGISTRO,  1}}
-		,{ADD,    {REGISTRO,  1}}
-		,{READ,   {REGISTRO,  1}}
-		,{ADD,    {REGISTRO,  1}}
-		,{READ,   {REGISTRO,  1}}
-		,{ADD,    {REGISTRO,  1}}
+		,{JUMP,   {ETICHETTA, 1}}
 		,{WRITE,  {REGISTRO,  0}}
+		,{HALT,   {NESSUNO,   0}}
 	};
 
 	struct RAM M;
 
-	Init(&M, S);
-
-	for(int i = 0; i < numel(Programma); ++i){
-		Execute(&M, Programma[i]);
-	}
-
-
+	Init(&M, S, Programma, numel(Programma));
+	Run(&M);
 	return 0;
 }
