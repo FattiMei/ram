@@ -2,16 +2,12 @@
 #include <stdlib.h>
 
 
-Stream *StreamNew(int *data, unsigned int size){
-	Stream *S = malloc(sizeof(Stream));
-
-	if(S != NULL){
-		S->data    = data;
-		S->current = data;
-		S->size    = size;
-	}
-
-	return S;
+Stream StreamBuild(int *data, unsigned int size){
+	return (Stream){
+		.size    = size,
+		.current = data,
+		.data    = data
+	};
 }
 
 

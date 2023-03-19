@@ -322,7 +322,7 @@ void Run(struct RAM *M){
 
 int main(){
 	int V[] = {1, 2, 3, 4, 5};
-	Stream *S = StreamNew(V, numel(V));
+	Stream S = StreamBuild(V, numel(V));
 
 	struct Instruction Programma[] = {
 		/* 0 */  {LOAD,   {NUMERO,    0}}
@@ -336,7 +336,7 @@ int main(){
 
 	struct RAM M;
 
-	Init(&M, S, Programma, numel(Programma));
+	Init(&M, &S, Programma, numel(Programma));
 	Run(&M);
 	return 0;
 }

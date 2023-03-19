@@ -5,6 +5,6 @@ typedef struct Stream{
 } Stream;
 
 
-Stream* StreamNew    (int *, unsigned int);
+Stream  StreamBuild  (int *, unsigned int);
 int     StreamIsEmpty(Stream *);
 int     StreamPull   (Stream *);
