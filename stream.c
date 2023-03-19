@@ -2,15 +2,8 @@
 #include <stdlib.h>
 
 
-struct Stream{
-	unsigned int size;
-	int *current;
-	int *data;
-};
-
-
-struct Stream *StreamNew(int *data, unsigned int size){
-	struct Stream *S = malloc(sizeof(struct Stream));
+Stream *StreamNew(int *data, unsigned int size){
+	Stream *S = malloc(sizeof(Stream));
 
 	if(S != NULL){
 		S->data    = data;
@@ -22,12 +15,12 @@ struct Stream *StreamNew(int *data, unsigned int size){
 }
 
 
-int StreamIsEmpty(struct Stream *S){
+int StreamIsEmpty(Stream *S){
 	return S->current >= (S->data + S->size);
 }
 
 
-int StreamPull(struct Stream *S){
+int StreamPull(Stream *S){
 	if(StreamIsEmpty(S))
 		return 0;
 

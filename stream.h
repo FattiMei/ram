@@ -1,5 +1,10 @@
-struct Stream;
+typedef struct Stream{
+	unsigned int size;
+	int *current;
+	int *data;
+} Stream;
 
-struct Stream* StreamNew    (int *, unsigned int);
-int            StreamIsEmpty(struct Stream *);
-int            StreamPull   (struct Stream *);
+
+Stream* StreamNew    (int *, unsigned int);
+int     StreamIsEmpty(Stream *);
+int     StreamPull   (Stream *);

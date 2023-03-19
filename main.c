@@ -84,7 +84,7 @@ struct RAM{
 	int program_size;
 	int lc;
 
-	struct Stream *input;
+	Stream *input;
 };
 
 
@@ -138,7 +138,7 @@ void Reset(struct RAM *M){
 }
 
 
-void Init(struct RAM *M, struct Stream *in, struct Instruction *P, int size){
+void Init(struct RAM *M, Stream *in, struct Instruction *P, int size){
 	M->input = in;
 
 	M->P = P;
@@ -322,7 +322,7 @@ void Run(struct RAM *M){
 
 int main(){
 	int V[] = {1, 2, 3, 4, 5};
-	struct Stream *S = StreamNew(V, numel(V));
+	Stream *S = StreamNew(V, numel(V));
 
 	struct Instruction Programma[] = {
 		/* 0 */  {LOAD,   {NUMERO,    0}}
