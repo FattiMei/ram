@@ -44,6 +44,26 @@ struct Instruction{
 };
 
 
+void InstructionPrettyPrint(struct Instruction I){
+	const char *codeliterals[] = {
+		 "HALT  " ,"LOAD  " ,"ADD   " ,"SUB   "
+		,"MULT  " ,"DIV   " ,"STORE " ,"READ  "
+		,"WRITE " ,"JUMP  " ,"JGTZ  " ,"JZERO "
+		,"JBLANK"
+	};
+
+	printf("%s ");
+
+	if (I.op.type == NUMERO){
+		printf("=");
+	} else if (I.op.type == PUNTATORE){
+		printf("*");
+	}
+
+	printf("%d\n", I.op.data);
+}
+
+
 struct RAM{
 	enum{
 		 OK
