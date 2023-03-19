@@ -52,12 +52,14 @@ void InstructionPrettyPrint(struct Instruction I){
 		,"JBLANK"
 	};
 
-	printf("%s ");
+	printf("%s ", codeliterals[I.code]);
 
 	if (I.op.type == NUMERO){
 		printf("=");
 	} else if (I.op.type == PUNTATORE){
 		printf("*");
+	} else{
+		printf(" ");
 	}
 
 	printf("%d\n", I.op.data);
