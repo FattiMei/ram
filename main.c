@@ -117,6 +117,8 @@ const int commandtable[] = {
 
 void Dump(struct RAM *M){
 	printf("State: %s\n\n", stateliteral[M->state]);
+	printf("Current: ");
+	InstructionPrettyPrint(M->P[M->lc]);
 
 	for(int i = 0; i < NREG; ++i){
 		printf("%2d -> %d\n", i, M->registri[i]);
@@ -289,13 +291,13 @@ int main(){
 	struct Stream *S = StreamNew(V, numel(V));
 
 	struct Instruction Programma[] = {
-		 {LOAD,   {NUMERO,    0}}
-		,{JBLANK, {ETICHETTA, 6}}
-		,{READ,   {REGISTRO,  1}}
-		,{ADD,    {REGISTRO,  1}}
-		,{JUMP,   {ETICHETTA, 1}}
-		,{WRITE,  {REGISTRO,  0}}
-		,{HALT,   {NESSUNO,   0}}
+		/* 0 */  {LOAD,   {NUMERO,    0}}
+		/* 1 */ ,{JBLANK, {ETICHETTA, 5}}
+		/* 2 */ ,{READ,   {REGISTRO,  1}}
+		/* 3 */ ,{ADD,    {REGISTRO,  1}}
+		/* 4 */ ,{JUMP,   {ETICHETTA, 1}}
+		/* 5 */ ,{WRITE,  {REGISTRO,  0}}
+		/* 6 */ ,{HALT,   {NESSUNO,   0}}
 	};
 
 	struct RAM M;
