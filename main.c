@@ -226,6 +226,24 @@ void Execute(struct RAM *M, struct Instruction I){
 					M->registri[0] -= x;
 					break;
 
+				case MULT:
+					if(I.op.type == REGISTRO)
+						x = *Access(M, I.op.data);
+					else
+						x = I.op.data;
+
+					M->registri[0] *= x;
+					break;
+
+				case DIV:
+					if(I.op.type == REGISTRO)
+						x = *Access(M, I.op.data);
+					else
+						x = I.op.data;
+
+					M->registri[0] /= x;
+					break;
+
 				case READ:
 					if(StreamIsEmpty(M->input)){
 						M->state = BAD_READ;
@@ -242,6 +260,22 @@ void Execute(struct RAM *M, struct Instruction I){
 				case JUMP:
 					has_to_jump = 1;
 					where_to_jump = I.op.data;
+
+					break;
+
+				case JGTZ:
+					if(M->registri[0] > 0){
+						has_to_jump = 1;
+						where_to_jump = I.op.data;
+					}
+
+					break;
+
+				case JZERO:
+					if(M->registri[0] == 0){
+						has_to_jump = 1;
+						where_to_jump = I.op.data;
+					}
 
 					break;
 
