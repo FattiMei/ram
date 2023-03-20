@@ -55,7 +55,7 @@ const int commandtable[] = {
 void Dump(struct RAM *M){
 	printf("State: %s\n\n", stateliteral[M->state]);
 	printf("Current: ");
-	InstructionPrettyPrint(M->P[M->lc]);
+	InstructionPrettyPrint(*(struct Instruction*)M->program->current);
 
 	for(int i = 0; i < NREG; ++i){
 		printf("%2d -> %d\n", i, M->registri[i]);
@@ -67,7 +67,6 @@ void Dump(struct RAM *M){
 
 void Reset(struct RAM *M){
 	M->state = OK;
-	M->lc = 0;
 
 	for(int i = 0; i < NREG; ++i){
 		M->registri[i] = 0;
@@ -75,11 +74,10 @@ void Reset(struct RAM *M){
 }
 
 
-void Init(struct RAM *M, Stream *in, struct Instruction *P, int size){
+void Init(struct RAM *M, Stream *in, Stream *program){
 	M->input = in;
 
-	M->P = P;
-	M->program_size = size;
+	M->program = program;
 	Reset(M);
 }
 
@@ -227,19 +225,20 @@ void Execute(struct RAM *M, struct Instruction I){
 		}
 
 		if(has_to_jump){
-			if(where_to_jump >= 0 && where_to_jump < M->program_size)
-				M->lc = where_to_jump;
+			if(where_to_jump >= 0 && where_to_jump < M->program->numel)
+				StreamSetCurrent(M->program, where_to_jump);
 		}
-		else if(I.code != HALT){
-			(M->lc)++;
-		}
-
 	}
 }
 
 
 void Run(struct RAM *M){
 	while(M->state == OK){
-		Execute(M, M->P[M->lc]);
+		if(StreamIsEmpty(M->program)){
+			M->state = BAD_JUMP;
+		} else{
+			struct Instruction I = *(struct Instruction*)StreamPull(M->program);
+			Execute(M, I);
+		}
 	}
 }

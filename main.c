@@ -23,7 +23,8 @@ int main(){
 
 	struct RAM M;
 
-	Init(&M, &S, Programma, numel(Programma));
+	Stream P = StreamBuild(Programma, numel(Programma), sizeof(struct Instruction));
+	Init(&M, &S, &P);
 	Run(&M);
 	return 0;
 }

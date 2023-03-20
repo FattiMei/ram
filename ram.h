@@ -55,15 +55,12 @@ struct RAM{
 
 	int registri[NREG];
 
-	struct Instruction *P;
-	int program_size;
-	int lc;
-
+	Stream *program;
 	Stream *input;
 };
 
 void Dump(struct RAM *M);
 void Reset(struct RAM *M);
-void Init(struct RAM *M, Stream *in, struct Instruction *P, int size);
+void Init(struct RAM *M, Stream *in, Stream *program);
 void Execute(struct RAM *M, struct Instruction I);
 void Run(struct RAM *M);
