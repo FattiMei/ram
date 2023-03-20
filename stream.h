@@ -2,14 +2,15 @@
 #define _STREAM_H_INCLUDED
 
 typedef struct Stream{
-	unsigned int size;
-	int *current;
-	int *data;
+	unsigned int blksize;
+	unsigned int numel;
+	void *current;
+	void *data;
 } Stream;
 
 
-Stream  StreamBuild  (int *, unsigned int);
+Stream  StreamBuild  (void *, unsigned int, unsigned int);
 int     StreamIsEmpty(Stream *);
-int     StreamPull   (Stream *);
+void   *StreamPull   (Stream *);
 
 #endif
