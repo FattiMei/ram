@@ -1,3 +1,6 @@
+#ifndef _STREAM_H_INCLUDED
+#define _STREAM_H_INCLUDED
+
 typedef struct Stream{
 	unsigned int size;
 	int *current;
@@ -8,3 +11,5 @@ typedef struct Stream{
 Stream  StreamBuild  (int *, unsigned int);
 int     StreamIsEmpty(Stream *);
 int     StreamPull   (Stream *);
+
+#endif
