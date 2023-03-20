@@ -240,6 +240,6 @@ void Execute(struct RAM *M, struct Instruction I){
 
 void Run(struct RAM *M){
 	while(M->state == OK){
-		Execute(M, *((M->P) + M->lc));
+		Execute(M, M->P[M->lc]);
 	}
 }
