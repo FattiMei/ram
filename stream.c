@@ -19,10 +19,14 @@ int StreamIsEmpty(Stream *S){
 
 
 void *StreamPull(Stream *S){
-	if(StreamIsEmpty(S))
-		return NULL;
+	void* res = NULL;
 
-	return S->current++;
+	if(!StreamIsEmpty(S)){
+		res = S->current;
+		S->current += S->blksize;
+	}
+
+	return res;
 }
 
 
