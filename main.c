@@ -20,11 +20,10 @@ int main(){
 	};
 
 
-	struct RAM M;
 	Stream S = StreamBuild(V, numel(V), sizeof(*V));
 	Stream P = StreamBuild(Programma, numel(Programma), sizeof(struct Instruction));
 
-	Init(&M, &S, &P);
-	Run(&M);
+	Ram M = RamBuild(&S, &P);
+	RamRun(&M);
 	return 0;
 }

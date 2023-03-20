@@ -3,6 +3,9 @@
 #include "ram.h"
 
 
+void RamReset(Ram *);
+
+
 void InstructionPrettyPrint(struct Instruction I){
 	const char *codeliterals[] = {
 		 "HALT  " ,"LOAD  " ,"ADD   " ,"SUB   "
@@ -58,13 +61,13 @@ Ram RamBuild(Stream *input, Stream *program){
 		.program = program
 	};
 
-	Reset(&res);
+	RamReset(&res);
 
 	return res;
 }
 
 
-void Dump(Ram *M){
+void RamDump(Ram *M){
 	printf("State: %s\n\n", stateliteral[M->state]);
 	printf("Current: ");
 	InstructionPrettyPrint(*(struct Instruction*)M->program->current);
@@ -77,7 +80,7 @@ void Dump(Ram *M){
 }
 
 
-void Reset(Ram *M){
+void RamReset(Ram *M){
 	M->state = OK;
 
 	for(int i = 0; i < NREG; ++i){
@@ -129,7 +132,7 @@ int GetNumericValue(Ram *M, struct Operand op){
 }
 
 
-void Execute(Ram *M, struct Instruction I){
+void RamExecute(Ram *M, struct Instruction I){
 	/* controlla che l'istruzione accetti il parametro */
 	int has_to_jump = 0;
 	int where = 0;
@@ -224,13 +227,13 @@ void Execute(Ram *M, struct Instruction I){
 }
 
 
-void Run(Ram *M){
+void RamRun(Ram *M){
 	while(M->state == OK){
 		if(StreamIsEmpty(M->program)){
 			M->state = BAD_JUMP;
 		} else{
 			struct Instruction I = *(struct Instruction*)StreamPull(M->program);
-			Execute(M, I);
+			RamExecute(M, I);
 		}
 	}
 }

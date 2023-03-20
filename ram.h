@@ -60,9 +60,6 @@ typedef struct Ram{
 } Ram;
 
 
-Ram  RamBuild(Stream *, Stream *);
-void Dump(Ram *M);
-void Reset(Ram *M);
-void Init(Ram *M, Stream *in, Stream *program);
-void Execute(Ram *M, struct Instruction I);
-void Run(Ram *M);
+Ram  RamBuild  (Stream *, Stream *);
+void RamExecute(Ram *M, struct Instruction I);
+void RamRun    (Ram *M);
