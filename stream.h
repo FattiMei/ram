@@ -12,5 +12,6 @@ typedef struct Stream{
 Stream  StreamBuild  (void *, unsigned int, unsigned int);
 int     StreamIsEmpty(Stream *);
 void   *StreamPull   (Stream *);
+int     StreamSetCurrent(Stream *, unsigned int);
 
 #endif

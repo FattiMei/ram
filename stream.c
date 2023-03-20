@@ -18,6 +18,16 @@ int StreamIsEmpty(Stream *S){
 }
 
 
+int StreamSetCurrent(Stream *S, unsigned int index){
+	if(index < S->numel){
+		S->current = S->data + index * S->blksize;
+		return 0;
+	}
+
+	return -1;
+}
+
+
 void *StreamPull(Stream *S){
 	void* res = NULL;
 
