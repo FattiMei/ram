@@ -112,6 +112,19 @@ struct Operand Dereference(struct RAM *M, struct Operand op){
 }
 
 
+int GetNumericValue(struct RAM *M, struct Operand op){
+	switch(op.type){
+		case NUMERO:
+			return op.data;
+
+		case REGISTRO:
+			return *Access(M, op.data);
+	}
+
+	return 0;
+}
+
+
 void Execute(struct RAM *M, struct Instruction I){
 	/* controlla che l'istruzione accetti il parametro */
 	int has_to_jump = 0;
@@ -121,7 +134,7 @@ void Execute(struct RAM *M, struct Instruction I){
 		I.op = Dereference(M, I.op);
 
 		if(M->state == OK){
-			int x;
+			int x = GetNumericValue(M, I.op);
 
 			switch(I.code){
 				case HALT:
@@ -129,13 +142,6 @@ void Execute(struct RAM *M, struct Instruction I){
 					break;
 
 				case LOAD:
-					// questo pattern si ripete per tutti quelle istruzioni
-					// che alla fine devono trattare numeri
-					if(I.op.type == REGISTRO)
-						x = *Access(M, I.op.data);
-					else
-						x = I.op.data;
-
 					M->registri[0] = x;
 					break;
 
@@ -144,38 +150,18 @@ void Execute(struct RAM *M, struct Instruction I){
 					break;
 
 				case ADD:
-					if(I.op.type == REGISTRO)
-						x = *Access(M, I.op.data);
-					else
-						x = I.op.data;
-
 					M->registri[0] += x;
 					break;
 
 				case SUB:
-					if(I.op.type == REGISTRO)
-						x = *Access(M, I.op.data);
-					else
-						x = I.op.data;
-
 					M->registri[0] -= x;
 					break;
 
 				case MULT:
-					if(I.op.type == REGISTRO)
-						x = *Access(M, I.op.data);
-					else
-						x = I.op.data;
-
 					M->registri[0] *= x;
 					break;
 
 				case DIV:
-					if(I.op.type == REGISTRO)
-						x = *Access(M, I.op.data);
-					else
-						x = I.op.data;
-
 					M->registri[0] /= x;
 					break;
 
