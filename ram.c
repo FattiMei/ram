@@ -52,6 +52,18 @@ const int commandtable[] = {
 };
 
 
+Ram RamBuild(Stream *input, Stream *program){
+	Ram res = (Ram){
+		.input = input,
+		.program = program
+	};
+
+	Reset(&res);
+
+	return res;
+}
+
+
 void Dump(Ram *M){
 	printf("State: %s\n\n", stateliteral[M->state]);
 	printf("Current: ");
@@ -71,14 +83,6 @@ void Reset(Ram *M){
 	for(int i = 0; i < NREG; ++i){
 		M->registri[i] = 0;
 	}
-}
-
-
-void Init(Ram *M, Stream *in, Stream *program){
-	M->input = in;
-
-	M->program = program;
-	Reset(M);
 }
 
 

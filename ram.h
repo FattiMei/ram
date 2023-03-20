@@ -60,6 +60,7 @@ typedef struct Ram{
 } Ram;
 
 
+Ram  RamBuild(Stream *, Stream *);
 void Dump(Ram *M);
 void Reset(Ram *M);
 void Init(Ram *M, Stream *in, Stream *program);
