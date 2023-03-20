@@ -30,11 +30,12 @@ void *StreamPull(Stream *S){
 
 int main(){
 	int array[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-	Stream input = StreamBuild(array, 10);
+	Stream input = StreamBuild(array, 10, sizeof(int));
 
 
 	while(!StreamIsEmpty(&input)){
-		printf("%d ", StreamPull(&input));
+		int x = *(int *)StreamPull(&input);
+		printf("%d ", x);
 	}
 
 	printf("\n");
