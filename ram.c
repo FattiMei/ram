@@ -115,7 +115,7 @@ struct Operand Dereference(struct RAM *M, struct Operand op){
 void Execute(struct RAM *M, struct Instruction I){
 	/* controlla che l'istruzione accetti il parametro */
 	int has_to_jump = 0;
-	int where_to_jump = 0;
+	int where = 0;
 
 	if(M->state == OK){
 		I.op = Dereference(M, I.op);
@@ -194,14 +194,14 @@ void Execute(struct RAM *M, struct Instruction I){
 
 				case JUMP:
 					has_to_jump = 1;
-					where_to_jump = I.op.data;
+					where = I.op.data;
 
 					break;
 
 				case JGTZ:
 					if(M->registri[0] > 0){
 						has_to_jump = 1;
-						where_to_jump = I.op.data;
+						where = I.op.data;
 					}
 
 					break;
@@ -209,7 +209,7 @@ void Execute(struct RAM *M, struct Instruction I){
 				case JZERO:
 					if(M->registri[0] == 0){
 						has_to_jump = 1;
-						where_to_jump = I.op.data;
+						where = I.op.data;
 					}
 
 					break;
@@ -217,7 +217,7 @@ void Execute(struct RAM *M, struct Instruction I){
 				case JBLANK:
 					if(StreamIsEmpty(M->input)){
 						has_to_jump = 1;
-						where_to_jump = I.op.data;
+						where = I.op.data;
 					}
 
 					break;
@@ -225,8 +225,10 @@ void Execute(struct RAM *M, struct Instruction I){
 		}
 
 		if(has_to_jump){
-			if(where_to_jump >= 0 && where_to_jump < M->program->numel)
-				StreamSetCurrent(M->program, where_to_jump);
+			int jump_safe = StreamSetCurrent(M->program, where);
+
+			if(jump_safe != 0)
+				M->state = BAD_JUMP;
 		}
 	}
 }
