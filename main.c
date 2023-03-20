@@ -9,8 +9,6 @@
 
 int main(){
 	int V[] = {1, 2, 3, 4, 5};
-	Stream S = StreamBuild(V, numel(V), sizeof(*V));
-
 	struct Instruction Programma[] = {
 		/* 0 */  {LOAD,   {NUMERO,    0}}
 		/* 1 */ ,{JBLANK, {ETICHETTA, 5}}
@@ -21,9 +19,11 @@ int main(){
 		/* 6 */ ,{HALT,   {NESSUNO,   0}}
 	};
 
-	struct RAM M;
 
+	struct RAM M;
+	Stream S = StreamBuild(V, numel(V), sizeof(*V));
 	Stream P = StreamBuild(Programma, numel(Programma), sizeof(struct Instruction));
+
 	Init(&M, &S, &P);
 	Run(&M);
 	return 0;
