@@ -41,7 +41,7 @@ struct Instruction{
 void InstructionPrettyPrint(struct Instruction I);
 
 
-typedef struct RAM{
+typedef struct Ram{
 	enum{
 		 OK
 		,END
@@ -57,12 +57,11 @@ typedef struct RAM{
 
 	Stream *program;
 	Stream *input;
-} RAM;
+} Ram;
 
 
-
-void Dump(RAM *M);
-void Reset(RAM *M);
-void Init(RAM *M, Stream *in, Stream *program);
-void Execute(RAM *M, struct Instruction I);
-void Run(RAM *M);
+void Dump(Ram *M);
+void Reset(Ram *M);
+void Init(Ram *M, Stream *in, Stream *program);
+void Execute(Ram *M, struct Instruction I);
+void Run(Ram *M);

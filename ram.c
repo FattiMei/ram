@@ -52,7 +52,7 @@ const int commandtable[] = {
 };
 
 
-void Dump(RAM *M){
+void Dump(Ram *M){
 	printf("State: %s\n\n", stateliteral[M->state]);
 	printf("Current: ");
 	InstructionPrettyPrint(*(struct Instruction*)M->program->current);
@@ -65,7 +65,7 @@ void Dump(RAM *M){
 }
 
 
-void Reset(RAM *M){
+void Reset(Ram *M){
 	M->state = OK;
 
 	for(int i = 0; i < NREG; ++i){
@@ -74,7 +74,7 @@ void Reset(RAM *M){
 }
 
 
-void Init(RAM *M, Stream *in, Stream *program){
+void Init(Ram *M, Stream *in, Stream *program){
 	M->input = in;
 
 	M->program = program;
@@ -82,7 +82,7 @@ void Init(RAM *M, Stream *in, Stream *program){
 }
 
 
-int* Access(RAM *M, int i){
+int* Access(Ram *M, int i){
 	/* Accedere al registro i-esimo */
 
 	if(i < 0){
@@ -98,7 +98,7 @@ int* Access(RAM *M, int i){
 }
 
 
-struct Operand Dereference(RAM *M, struct Operand op){
+struct Operand Dereference(Ram *M, struct Operand op){
 	struct Operand res = op;
 
 	if(op.type == PUNTATORE){
@@ -112,7 +112,7 @@ struct Operand Dereference(RAM *M, struct Operand op){
 }
 
 
-int GetNumericValue(RAM *M, struct Operand op){
+int GetNumericValue(Ram *M, struct Operand op){
 	switch(op.type){
 		case NUMERO:
 			return op.data;
@@ -125,7 +125,7 @@ int GetNumericValue(RAM *M, struct Operand op){
 }
 
 
-void Execute(RAM *M, struct Instruction I){
+void Execute(Ram *M, struct Instruction I){
 	/* controlla che l'istruzione accetti il parametro */
 	int has_to_jump = 0;
 	int where = 0;
@@ -220,7 +220,7 @@ void Execute(RAM *M, struct Instruction I){
 }
 
 
-void Run(RAM *M){
+void Run(Ram *M){
 	while(M->state == OK){
 		if(StreamIsEmpty(M->program)){
 			M->state = BAD_JUMP;
