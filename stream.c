@@ -3,9 +3,10 @@
 #include "stream.h"
 
 
-Stream StreamBuild(int *data, unsigned int size){
+Stream StreamBuild(void *data, unsigned int numel, unsigned int blksize){
 	return (Stream){
-		.size    = size,
+		.blksize = blksize,
+		.numel   = numel,
 		.current = data,
 		.data    = data
 	};
@@ -13,15 +14,15 @@ Stream StreamBuild(int *data, unsigned int size){
 
 
 int StreamIsEmpty(Stream *S){
-	return S->current >= (S->data + S->size);
+	return S->current >= (S->data + S->numel * S->blksize);
 }
 
 
-int StreamPull(Stream *S){
+void *StreamPull(Stream *S){
 	if(StreamIsEmpty(S))
-		return 0;
+		return NULL;
 
-	return *(S->current++);
+	return S->current++;
 }
 
 

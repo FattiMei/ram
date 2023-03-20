@@ -9,7 +9,7 @@
 
 int main(){
 	int V[] = {1, 2, 3, 4, 5};
-	Stream S = StreamBuild(V, numel(V));
+	Stream S = StreamBuild(V, numel(V), sizeof(*V));
 
 	struct Instruction Programma[] = {
 		/* 0 */  {LOAD,   {NUMERO,    0}}

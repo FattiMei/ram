@@ -186,7 +186,7 @@ void Execute(struct RAM *M, struct Instruction I){
 						M->state = BAD_READ;
 					}
 					else{
-						*Access(M, I.op.data) = StreamPull(M->input);
+						*Access(M, I.op.data) = *((int *)StreamPull(M->input));
 					}
 					break;
 
