@@ -55,10 +55,8 @@ const int commandtable[] = {
 };
 
 
-Ram RamBuild(Stream *program){
-	Ram res = (Ram){
-		.program = program
-	};
+Ram RamBuild(){
+	Ram res = {0};
 
 	RamReset(&res);
 
@@ -69,7 +67,7 @@ Ram RamBuild(Stream *program){
 void RamDump(Ram *M){
 	printf("State: %s\n\n", stateliteral[M->state]);
 	printf("Current: ");
-	InstructionPrettyPrint(*(struct Instruction*)M->program->current);
+	//InstructionPrettyPrint(*(struct Instruction*)M->program->current);
 
 	for(int i = 0; i < NREG; ++i){
 		printf("%2d -> %d\n", i, M->registri[i]);
@@ -133,7 +131,7 @@ int GetNumericValue(Ram *M, struct Operand op){
 }
 
 
-void RamExecute(Ram *M, struct Instruction I, Stream *input){
+void RamExecute(Ram *M, struct Instruction I, Stream *input, Stream *program){
 	/* controlla che l'istruzione accetti il parametro */
 	int has_to_jump = 0;
 	int where = 0;
@@ -216,7 +214,7 @@ void RamExecute(Ram *M, struct Instruction I, Stream *input){
 
 		if(has_to_jump){
 			const int where = I.op.data;
-			int jump_safe = StreamSetCurrent(M->program, where);
+			int jump_safe = StreamSetCurrent(program, where);
 
 			if(jump_safe != 0)
 				M->state = BAD_JUMP;
@@ -225,13 +223,13 @@ void RamExecute(Ram *M, struct Instruction I, Stream *input){
 }
 
 
-void RamRun(Ram *M, Stream *input){
+void RamRun(Ram *M, Stream *input, Stream *program){
 	while(M->state == OK){
-		if(StreamIsEmpty(M->program)){
+		if(StreamIsEmpty(program)){
 			M->state = BAD_JUMP;
 		} else{
-			struct Instruction I = *(struct Instruction*)StreamPull(M->program);
-			RamExecute(M, I, input);
+			struct Instruction I = *(struct Instruction*)StreamPull(program);
+			RamExecute(M, I, input, program);
 		}
 	}
 }
