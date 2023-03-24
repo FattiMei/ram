@@ -187,14 +187,12 @@ void RamExecute(Ram *M, struct Instruction I){
 
 				case JUMP:
 					has_to_jump = 1;
-					where = I.op.data;
 
 					break;
 
 				case JGTZ:
 					if(M->registri[0] > 0){
 						has_to_jump = 1;
-						where = I.op.data;
 					}
 
 					break;
@@ -202,7 +200,6 @@ void RamExecute(Ram *M, struct Instruction I){
 				case JZERO:
 					if(M->registri[0] == 0){
 						has_to_jump = 1;
-						where = I.op.data;
 					}
 
 					break;
@@ -210,7 +207,6 @@ void RamExecute(Ram *M, struct Instruction I){
 				case JBLANK:
 					if(StreamIsEmpty(M->input)){
 						has_to_jump = 1;
-						where = I.op.data;
 					}
 
 					break;
@@ -218,6 +214,7 @@ void RamExecute(Ram *M, struct Instruction I){
 		}
 
 		if(has_to_jump){
+			const int where = I.op.data;
 			int jump_safe = StreamSetCurrent(M->program, where);
 
 			if(jump_safe != 0)
