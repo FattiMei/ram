@@ -79,6 +79,7 @@ void RamDump(Ram *M){
 
 void RamReset(Ram *M){
 	M->state = OK;
+	M->lc    = 0;
 
 	for(int i = 0; i < NREG; ++i){
 		M->registri[i] = 0;
@@ -216,8 +217,12 @@ void RamExecute(Ram *M, struct Instruction I, Stream *input, Stream *program){
 			const int where = I.op.data;
 			int jump_safe = StreamSetCurrent(program, where);
 
+			M->lc = I.op.data;
+
 			if(jump_safe != 0)
 				M->state = BAD_JUMP;
+		} else{
+			M->lc++;
 		}
 	}
 }

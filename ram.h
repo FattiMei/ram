@@ -54,8 +54,7 @@ typedef struct Ram{
 	} state;
 
 	int registri[NREG];
-
-	//Stream *program;
+	int lc;
 } Ram;
 
 
