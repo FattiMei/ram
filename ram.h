@@ -56,10 +56,9 @@ typedef struct Ram{
 	int registri[NREG];
 
 	Stream *program;
-	Stream *input;
 } Ram;
 
 
-Ram  RamBuild  (Stream *, Stream *);
-void RamExecute(Ram *M, struct Instruction I);
-void RamRun    (Ram *M);
+Ram  RamBuild  (Stream *);
+void RamExecute(Ram *M, struct Instruction I, Stream *);
+void RamRun    (Ram *M, Stream *);

@@ -55,9 +55,8 @@ const int commandtable[] = {
 };
 
 
-Ram RamBuild(Stream *input, Stream *program){
+Ram RamBuild(Stream *program){
 	Ram res = (Ram){
-		.input = input,
 		.program = program
 	};
 
@@ -134,7 +133,7 @@ int GetNumericValue(Ram *M, struct Operand op){
 }
 
 
-void RamExecute(Ram *M, struct Instruction I){
+void RamExecute(Ram *M, struct Instruction I, Stream *input){
 	/* controlla che l'istruzione accetti il parametro */
 	int has_to_jump = 0;
 	int where = 0;
@@ -175,11 +174,11 @@ void RamExecute(Ram *M, struct Instruction I){
 					break;
 
 				case READ:
-					if(StreamIsEmpty(M->input)){
+					if(StreamIsEmpty(input)){
 						M->state = BAD_READ;
 					}
 					else{
-						*Access(M, I.op.data) = *((int *)StreamPull(M->input));
+						*Access(M, I.op.data) = *((int *)StreamPull(input));
 					}
 					break;
 
@@ -207,7 +206,7 @@ void RamExecute(Ram *M, struct Instruction I){
 					break;
 
 				case JBLANK:
-					if(StreamIsEmpty(M->input)){
+					if(StreamIsEmpty(input)){
 						has_to_jump = 1;
 					}
 
@@ -226,13 +225,13 @@ void RamExecute(Ram *M, struct Instruction I){
 }
 
 
-void RamRun(Ram *M){
+void RamRun(Ram *M, Stream *input){
 	while(M->state == OK){
 		if(StreamIsEmpty(M->program)){
 			M->state = BAD_JUMP;
 		} else{
 			struct Instruction I = *(struct Instruction*)StreamPull(M->program);
-			RamExecute(M, I);
+			RamExecute(M, I, input);
 		}
 	}
 }
