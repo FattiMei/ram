@@ -111,8 +111,10 @@ struct Operand Dereference(Ram *M, struct Operand op){
 	if(op.type == PUNTATORE){
 		int *p = Access(M, op.data);
 
-		if(p != NULL)
+		if(p != NULL){
+			res.type = REGISTRO;
 			res.data = *p;
+		}
 	}
 
 	return res;
