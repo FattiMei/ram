@@ -21,7 +21,7 @@ int main(){
 
 
 	Stream S = StreamBuild(V, numel(V), sizeof(*V));
-	Stream P = StreamBuild(Programma, numel(Programma), sizeof(struct Instruction));
+	Array P = ArrayBuild(Programma, numel(Programma), sizeof(struct Instruction));
 
 	Ram M = RamBuild();
 	RamRun(&M, &S, &P);

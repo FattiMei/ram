@@ -1,4 +1,5 @@
 #include "stream.h"
+#include "array.h"
 
 #define NREG 8
 
@@ -59,5 +60,5 @@ typedef struct Ram{
 
 
 Ram  RamBuild  ();
-void RamExecute(Ram *M, struct Instruction I, Stream *, Stream *);
-void RamRun    (Ram *M, Stream *, Stream *);
+void RamExecute(Ram *M, struct Instruction I, Stream *);
+void RamRun    (Ram *M, Stream *, Array *);

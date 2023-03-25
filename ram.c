@@ -132,7 +132,7 @@ int GetNumericValue(Ram *M, struct Operand op){
 }
 
 
-void RamExecute(Ram *M, struct Instruction I, Stream *input, Stream *program){
+void RamExecute(Ram *M, struct Instruction I, Stream *input){
 	/* controlla che l'istruzione accetti il parametro */
 	int has_to_jump = 0;
 	int where = 0;
@@ -214,13 +214,7 @@ void RamExecute(Ram *M, struct Instruction I, Stream *input, Stream *program){
 		}
 
 		if(has_to_jump){
-			const int where = I.op.data;
-			int jump_safe = StreamSetCurrent(program, where);
-
 			M->lc = I.op.data;
-
-			if(jump_safe != 0)
-				M->state = BAD_JUMP;
 		} else{
 			M->lc++;
 		}
@@ -228,13 +222,13 @@ void RamExecute(Ram *M, struct Instruction I, Stream *input, Stream *program){
 }
 
 
-void RamRun(Ram *M, Stream *input, Stream *program){
+void RamRun(Ram *M, Stream *input, Array *program){
 	while(M->state == OK){
-		if(StreamIsEmpty(program)){
+		if(ArrayOutOfBound(program, M->lc)){
 			M->state = BAD_JUMP;
 		} else{
-			struct Instruction I = *(struct Instruction*)StreamPull(program);
-			RamExecute(M, I, input, program);
+			struct Instruction I = *(struct Instruction*)ArrayGet(program, M->lc);
+			RamExecute(M, I, input);
 		}
 	}
 }
