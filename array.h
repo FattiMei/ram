@@ -8,7 +8,7 @@ typedef struct Array{
 } Array;
 
 
-Array ArrayBuild     (void *, unsigned int, unsigned int);
-void *ArrayGetElement(Array *, unsigned int);
+Array ArrayBuild(void *, unsigned int, unsigned int);
+void *ArrayGet  (Array *, unsigned int);
 
 #endif
