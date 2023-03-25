@@ -12,6 +12,11 @@ Array ArrayBuild(void *data, unsigned int numel, unsigned int blksize){
 }
 
 
+int ArrayOutOfBound(Array *A, unsigned int index){
+	return index >= A->numel;
+}
+
+
 void *ArrayGet(Array *A, unsigned int index){
 	if(index >= A->blksize * A->numel){
 		return NULL;
@@ -30,6 +35,15 @@ int main(){
 
 	for(unsigned int i = 0; i < V.numel; ++i){
 		printf("%d ", *(int *)ArrayGet(&V, i));
+	}
+	printf("\n");
+
+
+	unsigned int i = 0;
+	while(!ArrayOutOfBound(&V, i)){
+		printf("%d ", *(int *)ArrayGet(&V, i));
+
+		++i;
 	}
 	printf("\n");
 

@@ -9,6 +9,7 @@ typedef struct Array{
 
 
 Array ArrayBuild(void *, unsigned int, unsigned int);
+int   ArrayOutOfBound(Array *, unsigned int);
 void *ArrayGet  (Array *, unsigned int);
 
 #endif
